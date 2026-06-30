@@ -6,7 +6,8 @@ import io.restassured.specification.RequestSpecification;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "https://parabank.parasoft.com/parabank/services/bank";
+    public static final String BASE_URI = "https://parabank.parasoft.com";
+    public static final String BASE_PATH = "/parabank/services/bank";
     public static final String VALID_USERNAME = "john";
     public static final String VALID_PASSWORD = "demo";
     public static final String INVALID_USERNAME ="notauser";
@@ -14,21 +15,22 @@ public class ApiClient {
 
     public static RequestSpecification baseRequest(){
         return RestAssured.given()
-                .baseUri(BASE_URL)
+                .baseUri(BASE_URI)
+                .basePath(BASE_PATH)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json");
     }
 
-    public static Response Login(String username, String password){
+    public static Response login(String username, String password){
         return baseRequest()
                 .queryParam("username", username)
                 .queryParam("password", password)
-                .get("/login" + username + "/" + password);
+                .get("/login/" + username + "/" + password);
     }
 
     public static Response getAccounts(int customerId){
         return baseRequest()
-                .get("/cutomers/" + customerId + "/accounts");
+                .get("/customers/" + customerId + "/accounts");
     }
 
     public static Response getAccount(int accountId){
