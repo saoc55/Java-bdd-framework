@@ -42,7 +42,7 @@ public class ApiClient {
         return baseRequest()
                 .queryParam("fromAccountId", fromAccount)
                 .queryParam("toAccountId", toAccount)
-                .queryParam("Amount", amount)
+                .queryParam("amount", amount)
                 .post("/transfer");
     }
 
