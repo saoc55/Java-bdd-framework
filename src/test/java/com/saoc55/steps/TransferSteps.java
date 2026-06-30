@@ -20,11 +20,26 @@ public class TransferSteps {
     }
 
     @Given("I have at least two accounts")
-    public void iHaveAtLeastTwoAccounts(){
+    public void iHaveAtLeastTwoAccounts() {
         Response accountsResponse = ApiClient.getAccounts(ctx.customerId);
         List<Integer> accountIds = accountsResponse.jsonPath().getList("id");
-        assertTrue(accountIds.size() >= 2, "Expected at lease 2 accounts but found: " + accountIds.size());
-        ctx.accountId  =accountIds.get(0);
+
+        if (accountIds.size() < 2) {
+            // Create a savings account if fewer than 2 exist
+            ApiClient.baseRequest()
+                    .queryParam("customerId", ctx.customerId)
+                    .queryParam("newAccountType", 1)
+                    .queryParam("fromAccountId", accountIds.get(0))
+                    .post("/createAccount");
+
+            // Refresh account list
+            accountIds = ApiClient.getAccounts(ctx.customerId)
+                    .jsonPath().getList("id");
+        }
+
+        assertTrue(accountIds.size() >= 2,
+                "Expected at least 2 accounts but found: " + accountIds.size());
+        ctx.accountId = accountIds.get(0);
         ctx.secondAccountId = accountIds.get(1);
     }
 
