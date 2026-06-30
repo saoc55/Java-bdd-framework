@@ -35,7 +35,7 @@ public class ApiClient {
 
     public static Response getAccount(int accountId){
         return baseRequest()
-                .get("/customers/" + accountId);
+                .get("/accounts/" + accountId);
     }
 
     public static Response transfer(int fromAccount, int toAccount, int amount){
